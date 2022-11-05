@@ -3,6 +3,7 @@ package com.vivekvista.taglocationassignment.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.vivekvista.taglocationassignment.presentation.state.LocationState
+import com.vivekvista.taglocationassignment.presentation.ui.theme.bottomSheetBackground
+import com.vivekvista.taglocationassignment.presentation.ui.theme.buttonBackground
+import com.vivekvista.taglocationassignment.presentation.ui.theme.buttonTextColor
 import com.vivekvista.taglocationassignment.presentation.viewmodels.LocationViewModel
 
 @Composable
@@ -44,7 +48,7 @@ internal fun BottomSheet(
     ) {
         Column(
             modifier = Modifier
-                .background(color = Color.White)
+                .background(color = MaterialTheme.colors.bottomSheetBackground)
                 .padding(vertical = 16.dp)
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -80,11 +84,15 @@ internal fun BottomSheet(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("submit button"),
+                    .testTag("submit button")
+                    .background(MaterialTheme.colors.buttonBackground),
                 enabled = uiState.sumbitState,
                 onClick = onSubmit
             ) {
-                Text(text = "SUBMIT")
+                Text(
+                    text = "SUBMIT",
+                    color = MaterialTheme.colors.buttonTextColor
+                )
             }
         }
     }

@@ -17,7 +17,6 @@ import com.vivekvista.taglocationassignment.presentation.viewmodels.LocationView
 
 class MainActivity : ComponentActivity() {
 
-
     private val locationViewModel: LocationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,18 +31,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TagLocationAssignmentTheme {
-        Greeting("Android")
     }
 }
