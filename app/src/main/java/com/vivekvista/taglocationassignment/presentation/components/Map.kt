@@ -78,6 +78,7 @@ internal fun Map(
             val latLong = cameraPositionState.position.target
             onLatLngChange(latLong)
 
+
             if (locationState.isMarkerAdded) {
                 Marker(
                     tag = "Marker",
@@ -92,7 +93,8 @@ internal fun Map(
                 modifier = Modifier
                     .testTag("Target")
                     .align(Alignment.Center)
-                    .size(60.dp),
+                    .size(40.dp),
+                //Red is more visible than Black
                 tint = Color.Red,
                 imageVector = Icons.Default.Add,
                 contentDescription = "Location"

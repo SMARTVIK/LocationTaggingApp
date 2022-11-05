@@ -39,7 +39,6 @@ internal fun FAB(
     removeMarker: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val focusManager = LocalFocusManager.current
     FloatingActionButton(onClick = {
         scope.launch {
             if (sheetState.bottomSheetState.isCollapsed) {
@@ -48,7 +47,6 @@ internal fun FAB(
             } else {
                 removeMarker()
                 sheetState.bottomSheetState.collapse()
-                focusManager.clearFocus()
             }
         }
     }) {

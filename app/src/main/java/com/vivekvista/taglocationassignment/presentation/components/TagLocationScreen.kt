@@ -71,7 +71,7 @@ internal fun TagLocation(
         sheetBackgroundColor = Color.Transparent,
         sheetElevation = 0.dp,
         sheetGesturesEnabled = false,
-        sheetPeekHeight = 40.dp,
+        sheetPeekHeight = 35.dp,
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = fab
     ) {

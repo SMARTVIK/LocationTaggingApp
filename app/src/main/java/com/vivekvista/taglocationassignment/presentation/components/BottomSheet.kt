@@ -43,7 +43,7 @@ internal fun BottomSheet(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(top = 38.dp)
+            .padding(top = 40.dp)
     ) {
         Column(
             modifier = Modifier
@@ -60,7 +60,7 @@ internal fun BottomSheet(
 
                 onValueChange = onPropertyNameChange,
                 label = {
-                    Text(text = "Property Name")
+                    Text(text = "Location Name")
                 }
             )
 
@@ -69,12 +69,12 @@ internal fun BottomSheet(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("propertyCoordinates textField"),
+                    .testTag("location coordinates textField"),
                 enabled = false,
                 value = uiState.locationCoordinates,
                 onValueChange = {},
                 label = {
-                    Text(text = "Property Coordinates")
+                    Text(text = "Location Coordinates")
                 }
             )
 
@@ -83,7 +83,7 @@ internal fun BottomSheet(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("submit button"),
+                    .testTag("Submit Button"),
                 enabled = uiState.sumbitState,
                 onClick = onSubmit,
             ) {

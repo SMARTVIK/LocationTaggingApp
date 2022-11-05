@@ -1,5 +1,6 @@
 package com.vivekvista.taglocationassignment.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vivekvista.taglocationassignment.common.Constants.INITIAL_LOCATION
@@ -45,6 +46,7 @@ class LocationViewModel @Inject constructor(
                  val deferredValue = viewModelScope.async { checkIfLocationExistUseCase(latLng) }
                  val result = deferredValue.await()
                  if (result != null) {
+                     Log.d("RESULT", "checkIfThisLocationIsAlreadySaved: (${latLng.latitude},${latLng.longitude})")
                      locationName.value = result.locationName
                  }
              }

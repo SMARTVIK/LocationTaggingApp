@@ -9,10 +9,17 @@ import javax.inject.Inject
 class LocationRepositoryImpl @Inject constructor(
     private val locationDao: LocationDao
 ) : LocationRepository {
+
+    /*
+    Inserting the location into db
+    */
     override suspend fun saveLocation(locModel: LocModel) {
         locationDao.insert(locModel.toLocationEntityModel())
     }
 
+    /*
+    * Here we check if the location we are at, Is already saved in db or not?
+    * */
     override suspend fun getLocationByCoordinates(latitude: Double, longitude: Double) : LocationEntity{
         val locationCoordinatesString = "$latitude,$longitude"
         return locationDao.getLocationByCoordinates(locationCoordinatesString)
