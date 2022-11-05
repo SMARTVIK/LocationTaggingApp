@@ -21,12 +21,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TagLocationScreen(viewModel: LocationViewModel) {
-    val state = viewModel.tagPropertyUIStateFlow.collectAsState()
+    //fetching the current state from view model
+    val state = viewModel.locationTagFlow.collectAsState()
     val bottomSheetValue = if(state.value.isMarkerAdded) BottomSheetValue.Expanded else BottomSheetValue.Collapsed
     val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = bottomSheetValue)
     )
-    TagPropertyScreen(
+    TagLocation(
         uiState = state.value,
         sheetState = bottomSheetState,
         fab = {
@@ -38,13 +39,13 @@ fun TagLocationScreen(viewModel: LocationViewModel) {
         map = {
             Map(viewModel = viewModel)
         },
-        reset = viewModel::reset
+        reset = viewModel::onReset
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-internal fun TagPropertyScreen(
+internal fun TagLocation(
     uiState: LocationState,
     sheetState: BottomSheetScaffoldState,
     fab: (@Composable () -> Unit),
@@ -53,6 +54,8 @@ internal fun TagPropertyScreen(
     reset: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
+
+    //onBackPressed
     BackHandler {
         scope.launch {
             reset()
@@ -68,7 +71,7 @@ internal fun TagPropertyScreen(
         sheetBackgroundColor = Color.Transparent,
         sheetElevation = 0.dp,
         sheetGesturesEnabled = false,
-        sheetPeekHeight = 38.dp,
+        sheetPeekHeight = 40.dp,
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = fab
     ) {
@@ -77,7 +80,7 @@ internal fun TagPropertyScreen(
 
         if (uiState.isLocationSaved) {
             reset()
-            Toast.makeText(LocalContext.current, "Property is saved", Toast.LENGTH_LONG).show()
+            Toast.makeText(LocalContext.current, "Location saved", Toast.LENGTH_LONG).show()
         }
     }
 }

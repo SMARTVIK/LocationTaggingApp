@@ -10,6 +10,7 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 val ButtonLightBackground = Color(0xFF525252)
 val ButtonDarkBackground = Color(0xFFFFFFFF)
+val BottomSheetLightBackground = Color(0xFFECF0F3)
 
 val Colors.buttonBackground: Color
     @Composable
@@ -26,7 +27,7 @@ val Colors.buttonTextColor: Color
 val Colors.bottomSheetBackground: Color
     @Composable
     get() {
-        return if(isLight) Color.White else Color.Black
+        return if(isLight) BottomSheetLightBackground else BottomSheetLightBackground
     }
 
 

@@ -1,7 +1,7 @@
 package com.vivekvista.taglocationassignment.domain.use_case
 
 
-import com.vivekvista.taglocationassignment.domain.model.Property
+import com.vivekvista.taglocationassignment.domain.model.LocModel
 import com.vivekvista.taglocationassignment.domain.repository.LocationRepository
 import javax.inject.Inject
 /*
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SaveLocationUseCase @Inject constructor(
     private val repository: LocationRepository
 ) {
-    suspend operator fun invoke(location: Property) {
+    suspend operator fun invoke(location: LocModel) {
         repository.saveLocation(location)
     }
 }

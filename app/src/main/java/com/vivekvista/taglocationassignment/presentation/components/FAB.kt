@@ -21,12 +21,12 @@ fun FAB(
     sheetState: BottomSheetScaffoldState,
     viewModel: LocationViewModel
 ){
-    val uiState = viewModel.tagPropertyUIStateFlow.collectAsState()
+    val uiState = viewModel.locationTagFlow.collectAsState()
     FAB(
         sheetState = sheetState,
         uiState = uiState.value,
-        addMarker = viewModel::addMarker,
-        removeMarker = viewModel::reset
+        addMarker = viewModel::onAddMarker,
+        removeMarker = viewModel::onReset
     )
 }
 

@@ -24,24 +24,28 @@ import com.vivekvista.taglocationassignment.presentation.viewmodels.LocationView
 
 @Composable
 fun Map(viewModel: LocationViewModel) {
-    val uiState = viewModel.tagPropertyUIStateFlow.collectAsState()
+    val locationState = viewModel.locationTagFlow.collectAsState()
     Map(
-        uiState = uiState.value,
+        locationState = locationState.value,
+        //
         onLatLngChange = {
-            viewModel.onPropertyCoordinatesChange(it)
+            viewModel.onLocationCoordinateChange(it)
         }
     )
 }
 
 @Composable
 internal fun Map(
-    uiState: LocationState,
+    locationState: LocationState,
     onLatLngChange: (latLng: LatLng) -> Unit
 ) {
 
+    //Camera is zoomed in to locate the properties easily
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(uiState.markerPosition, 90f)
+        position = CameraPosition.fromLatLngZoom(locationState.markerPosition, 180f)
     }
+
+    //We are using satellite view for location tagging
     val properties = remember {
         mutableStateOf(MapProperties(mapType = MapType.SATELLITE))
     }
@@ -50,10 +54,10 @@ internal fun Map(
         mutableStateOf(MapUiSettings())
     }
 
-    uiSettings.value = uiSettings.value.copy(scrollGesturesEnabled = !uiState.isMarkerAdded)
+    uiSettings.value = uiSettings.value.copy(scrollGesturesEnabled = !locationState.isMarkerAdded)
 
     val yPos: Float by animateFloatAsState(
-        targetValue = if(uiState.isMarkerAdded) -250f else 0f,
+        targetValue = if(locationState.isMarkerAdded) -250f else 0f,
         animationSpec = tween(300, easing = LinearOutSlowInEasing)
     )
 
@@ -66,7 +70,7 @@ internal fun Map(
         GoogleMap(
             modifier = Modifier
                 .fillMaxSize()
-                .testTag("map"),
+                .testTag("Map"),
             properties = properties.value,
             uiSettings = uiSettings.value,
             cameraPositionState = cameraPositionState
@@ -74,18 +78,19 @@ internal fun Map(
             val latLong = cameraPositionState.position.target
             onLatLngChange(latLong)
 
-            if (uiState.isMarkerAdded) {
+            if (locationState.isMarkerAdded) {
                 Marker(
-                    tag = "marker",
+                    tag = "Marker",
                     state = MarkerState(position = latLong),
                 )
             }
         }
 
-        if (!uiState.isMarkerAdded) {
+        //Once marker is added we change the icon to add icon
+        if (!locationState.isMarkerAdded) {
             Icon(
                 modifier = Modifier
-                    .testTag("target")
+                    .testTag("Target")
                     .align(Alignment.Center)
                     .size(60.dp),
                 tint = Color.Red,

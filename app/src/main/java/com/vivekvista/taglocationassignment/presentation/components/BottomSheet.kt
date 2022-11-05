@@ -10,25 +10,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vivekvista.taglocationassignment.presentation.state.LocationState
 import com.vivekvista.taglocationassignment.presentation.ui.theme.bottomSheetBackground
 import com.vivekvista.taglocationassignment.presentation.ui.theme.buttonBackground
-import com.vivekvista.taglocationassignment.presentation.ui.theme.buttonTextColor
 import com.vivekvista.taglocationassignment.presentation.viewmodels.LocationViewModel
 
 @Composable
 fun BottomSheet(viewModel: LocationViewModel){
-    val uiState = viewModel.tagPropertyUIStateFlow.collectAsState()
+    val uiState = viewModel.locationTagFlow.collectAsState()
     BottomSheet(
         uiState = uiState.value,
         onPropertyNameChange = {
-            viewModel.onPropertyNameChange(it)
+            viewModel.onLocationChange(it)
         },
         onSubmit = {
-            viewModel.saveProperty()
+            viewModel.saveLocation()
         }
     )
 }
@@ -57,7 +56,7 @@ internal fun BottomSheet(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = uiState.propertyName,
+                value = uiState.locationName,
 
                 onValueChange = onPropertyNameChange,
                 label = {
@@ -72,7 +71,7 @@ internal fun BottomSheet(
                     .fillMaxWidth()
                     .testTag("propertyCoordinates textField"),
                 enabled = false,
-                value = uiState.propertyCoordinates,
+                value = uiState.locationCoordinates,
                 onValueChange = {},
                 label = {
                     Text(text = "Property Coordinates")
@@ -84,16 +83,20 @@ internal fun BottomSheet(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("submit button")
-                    .background(MaterialTheme.colors.buttonBackground),
+                    .testTag("submit button"),
                 enabled = uiState.sumbitState,
-                onClick = onSubmit
+                onClick = onSubmit,
             ) {
                 Text(
                     text = "SUBMIT",
-                    color = MaterialTheme.colors.buttonTextColor
                 )
             }
         }
     }
+}
+
+@Preview
+@Composable
+internal fun BottomSheetPreview() {
+
 }

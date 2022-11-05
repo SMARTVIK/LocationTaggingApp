@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vivekvista.taglocationassignment.common.Constants.INITIAL_LOCATION
 import com.google.android.gms.maps.model.LatLng
-import com.vivekvista.taglocationassignment.domain.model.Property
+import com.vivekvista.taglocationassignment.domain.model.LocModel
+import com.vivekvista.taglocationassignment.domain.use_case.CheckIfLocationExistUseCase
 import com.vivekvista.taglocationassignment.domain.use_case.SaveLocationUseCase
 import com.vivekvista.taglocationassignment.presentation.state.LocationState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,65 +19,82 @@ import javax.inject.Inject
 * This ViewModel is created to manage the UI state of the application
 * We have put our business logic inside the use_case class
 * */
+@HiltViewModel
 class LocationViewModel @Inject constructor(
-    private val saveLocationUseCase: SaveLocationUseCase
+    private val saveLocationUseCase: SaveLocationUseCase,
+    private val checkIfLocationExistUseCase: CheckIfLocationExistUseCase
 ) : ViewModel() {
 
-    private val propertyNameFlow = MutableStateFlow("")
-    private val propertyCoordinatesFlow = MutableStateFlow(INITIAL_LOCATION)
+    private val locationName = MutableStateFlow("")
+    private val locationCoordinates = MutableStateFlow(INITIAL_LOCATION)
     private val addMarkerFlow = MutableStateFlow(false)
-    private val propertySavedFlow = MutableStateFlow(false)
+    private val locationSavedFlow = MutableStateFlow(false)
 
 
-    fun onPropertyNameChange(propertyName: String) {
-        propertyNameFlow.value = propertyName
+    fun onLocationChange(propertyName: String) {
+        locationName.value = propertyName
     }
 
-    fun onPropertyCoordinatesChange(latLng: LatLng) {
-        propertyCoordinatesFlow.value = latLng
+    fun onLocationCoordinateChange(latLng: LatLng) {
+        locationCoordinates.value = latLng
+        checkIfThisLocationIsAlreadySaved(latLng)
     }
 
-    fun addMarker(){
+    private fun checkIfThisLocationIsAlreadySaved(latLng: LatLng) {
+             viewModelScope.launch {
+                 val deferredValue = viewModelScope.async { checkIfLocationExistUseCase(latLng) }
+                 val result = deferredValue.await()
+                 if (result != null) {
+                     locationName.value = result.locationName
+                 }
+             }
+    }
+
+    fun onAddMarker(){
         addMarkerFlow.value = true
     }
 
-    fun reset(){
+    fun onReset(){
         addMarkerFlow.value = false
-        propertySavedFlow.value = false
-        propertyNameFlow.value = ""
+        locationSavedFlow.value = false
+        locationName.value = ""
     }
 
-    val tagPropertyUIStateFlow: StateFlow<LocationState> =
+    val locationTagFlow: StateFlow<LocationState> =
         combine(
-            propertyNameFlow,
-            propertyCoordinatesFlow,
+            locationName,
+            locationCoordinates,
             addMarkerFlow,
-            propertySavedFlow
-        ) { propertyName, propertyCoordinates, addMarker, propertySaved ->
+            locationSavedFlow
+        ) { locationName, locationCoordinates, addMarker, onLocationSavedFlow ->
             LocationState(
-                propertyName = propertyName,
-                markerPosition = propertyCoordinates,
+                locationName = locationName,
+                markerPosition = locationCoordinates,
                 isMarkerAdded = addMarker,
-                isLocationSaved = propertySaved
+                isLocationSaved = onLocationSavedFlow
             )
         }.stateIn(
             initialValue = LocationState(),
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000)
+            started = SharingStarted.WhileSubscribed(3000)
         )
 
-    fun saveProperty(){
+    /*
+    * This is function which saves the location-name and coordinates
+    * in db in background thread
+    * */
+    fun saveLocation(){
         viewModelScope.launch {
-            val state = tagPropertyUIStateFlow.value
+            val state = locationTagFlow.value
             withContext(Dispatchers.IO){
                 saveLocationUseCase(
-                    Property(
-                        propertyName = state.propertyName,
-                        propertyCoordinates = state.propertyCoordinates
+                    LocModel(
+                        locationName = state.locationName,
+                        locationCoordinates = state.locationCoordinates
                     )
                 )
             }
-            propertySavedFlow.value = true
+            locationSavedFlow.value = true
         }
     }
 
