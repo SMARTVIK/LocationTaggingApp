@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vivekvista.taglocationassignment.presentation.state.LocationState
 import com.vivekvista.taglocationassignment.presentation.ui.theme.bottomSheetBackground
-import com.vivekvista.taglocationassignment.presentation.ui.theme.buttonBackground
 import com.vivekvista.taglocationassignment.presentation.viewmodels.LocationViewModel
 
 @Composable
@@ -23,7 +22,7 @@ fun BottomSheet(viewModel: LocationViewModel){
     val uiState = viewModel.locationTagFlow.collectAsState()
     BottomSheet(
         uiState = uiState.value,
-        onPropertyNameChange = {
+        onLocationChanged = {
             viewModel.onLocationChange(it)
         },
         onSubmit = {
@@ -36,7 +35,7 @@ fun BottomSheet(viewModel: LocationViewModel){
 @Composable
 internal fun BottomSheet(
     uiState: LocationState,
-    onPropertyNameChange: (String) -> Unit,
+    onLocationChanged: (String) -> Unit,
     onSubmit: () -> Unit
 ) {
     Box(
@@ -58,7 +57,7 @@ internal fun BottomSheet(
                     .fillMaxWidth(),
                 value = uiState.locationName,
 
-                onValueChange = onPropertyNameChange,
+                onValueChange = onLocationChanged,
                 label = {
                     Text(text = "Location Name")
                 }

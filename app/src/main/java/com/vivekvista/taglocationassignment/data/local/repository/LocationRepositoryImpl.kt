@@ -5,7 +5,9 @@ import com.vivekvista.taglocationassignment.data.local.model.LocationEntity
 import com.vivekvista.taglocationassignment.domain.model.LocModel
 import com.vivekvista.taglocationassignment.domain.repository.LocationRepository
 import javax.inject.Inject
-
+/*
+* Implementation of the repository
+* */
 class LocationRepositoryImpl @Inject constructor(
     private val locationDao: LocationDao
 ) : LocationRepository {

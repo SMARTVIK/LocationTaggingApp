@@ -32,11 +32,12 @@ class LocationViewModel @Inject constructor(
     private val locationSavedFlow = MutableStateFlow(false)
 
 
-    fun onLocationChange(propertyName: String) {
-        locationName.value = propertyName
+    fun onLocationChange(locationName: String) {
+        this.locationName.value = locationName
     }
 
     fun onLocationCoordinateChange(latLng: LatLng) {
+        locationTagFlow.value.markerPosition = latLng
         locationCoordinates.value = latLng
         checkIfThisLocationIsAlreadySaved(latLng)
     }

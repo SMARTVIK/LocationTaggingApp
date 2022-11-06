@@ -23,11 +23,11 @@ import com.vivekvista.taglocationassignment.presentation.state.LocationState
 import com.vivekvista.taglocationassignment.presentation.viewmodels.LocationViewModel
 
 @Composable
-fun Map(viewModel: LocationViewModel) {
+fun Map(viewModel: LocationViewModel, currentLocation: LatLng) {
     val locationState = viewModel.locationTagFlow.collectAsState()
+    locationState.value.markerPosition = currentLocation
     Map(
         locationState = locationState.value,
-        //
         onLatLngChange = {
             viewModel.onLocationCoordinateChange(it)
         }
