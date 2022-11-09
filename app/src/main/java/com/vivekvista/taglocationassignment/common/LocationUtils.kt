@@ -36,8 +36,8 @@ object LocationUtils {
         }
 
         val locationRequest = LocationRequest.create().apply {
-            interval = 0
-            fastestInterval = 0
+            interval = 10000
+            fastestInterval = 5000
             priority = Priority.PRIORITY_HIGH_ACCURACY
         }
         Looper.myLooper()?.let { looper ->

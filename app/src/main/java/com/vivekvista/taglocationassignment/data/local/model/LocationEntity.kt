@@ -14,4 +14,6 @@ data class LocationEntity(
 
     @ColumnInfo(name = "location_coordinates")
     val locationCoordinates: String
+
+
 )

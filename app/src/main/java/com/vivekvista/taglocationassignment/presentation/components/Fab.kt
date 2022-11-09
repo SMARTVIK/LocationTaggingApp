@@ -1,5 +1,6 @@
 package com.vivekvista.taglocationassignment.presentation.components
 
+import android.util.Log
 import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
@@ -22,6 +23,7 @@ fun FAB(
     viewModel: LocationViewModel
 ){
     val uiState = viewModel.locationTagFlow.collectAsState()
+    Log.d("TAG", "FAB: is called")
     FAB(
         sheetState = sheetState,
         uiState = uiState.value,

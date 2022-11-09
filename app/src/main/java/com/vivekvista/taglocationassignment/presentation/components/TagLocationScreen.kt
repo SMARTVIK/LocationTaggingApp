@@ -49,22 +49,25 @@ fun TagLocationScreen(
 
     var requestLocationUpdate by remember { mutableStateOf(true)}
 
-    OnPermissionGranted(viewModel = viewModel, locationProvided = locationProvided, currentLocation)
+    OnPermissionGranted(
+        viewModel = viewModel,
+        locationProvided = locationProvided,
+        currentLocation = currentLocation
+    )
 
     if(requestLocationUpdate) {
         LocationPermissionsAndSettingDialogs(
             updateCurrentLocation = {
                 requestLocationUpdate = false
                 LocationUtils.requestLocationResultCallback(fusedLocationProviderClient) { locationResult ->
-                    locationResult.lastLocation?.let { location ->
-                        Log.d("TAG", "TagLocationScreen: got the last Location")
+                    locationResult.locations.lastOrNull()?.let { location ->
                         val markerPos = LatLng(location.latitude, location.longitude)
                         viewModel.onLocationCoordinateChange(markerPos)
-                         requestLocationUpdate = false
-                         locationProvided = true
-                         currentLocation = markerPos
+                        requestLocationUpdate = false
+                        locationProvided = true
+                        viewModel.onLocationCoordinateChange(markerPos)
+                        Log.d("TAG", "TagLocationScreen: New Location Received (${markerPos})")
                     }
-
                 }
             }
         )
@@ -79,7 +82,7 @@ private fun OnPermissionGranted(
     currentLocation: LatLng,
 ) {
 
-    Log.d("Map Method", "TagLocationScreen OnPermissionGranted: $locationProvided")
+//    Log.d("Map Method", "TagLocationScreen OnPermissionGranted: $locationProvided")
     //fetching the current state from view model
     val state = viewModel.locationTagFlow.collectAsState()
     val bottomSheetValue =
@@ -97,7 +100,7 @@ private fun OnPermissionGranted(
             BottomSheet(viewModel = viewModel)
         },
         map = {
-            Map(viewModel = viewModel, currentLocation)
+            Map(viewModel = viewModel, currentLocation = currentLocation)
         },
         reset = viewModel::onReset
     )
